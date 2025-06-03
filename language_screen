@@ -79,7 +79,10 @@ class LanguageScreen extends StatelessWidget {
               height: 45.h,
               fontWeight: FontWeight.bold,
               fontSize: 14.sp,
-              onPressed: () {},
+              onPressed: () {
+Navigator.pushNamedAndRemoveUntil( 
+                            context, ScreenNames.welcomeScreen, (route) => false);
+              },
               text: 'استمرار',
             ),
             SizedBox(height: 30.h),
