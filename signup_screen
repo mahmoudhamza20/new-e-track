@@ -1,0 +1,231 @@
+import 'package:etrack/components/Text/text_custom.dart';
+import 'package:etrack/components/back_button.dart';
+import 'package:etrack/components/button/button.dart';
+import 'package:etrack/components/phone_field_with_country_picker.dart';
+import 'package:etrack/routes/routes.dart';
+import 'package:etrack/utility/all_app_words.dart';
+import 'package:etrack/utility/app_colors.dart';
+import 'package:etrack/utility/app_fonts.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+enum otpType { login, signUp }
+
+class SignupScreen extends StatelessWidget {
+  SignupScreen({Key? key}) : super(key: key);
+
+  TextEditingController phone = TextEditingController();
+
+  GlobalKey<FormState> formKey = GlobalKey();
+
+  bool isPrivacyChecked = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(20.sp),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 40.sp,
+                  ),
+                  const Row(
+                    children: [
+                      BackButtonCustom(isDark: false),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 40.h,
+                  ),
+                  TxtN(
+                    text: 'تسجيل جديد',
+                    fontSize: 28.sp,
+                    color: AppColors.mainTitleColor,
+                    fontWeight: FontWeight.w700,
+                  ),
+                  SizedBox(
+                    height: 10.h,
+                  ),
+                  TxtN(
+                    text: 'إنشاء حساب جديد',
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.normal,
+                    color: AppColors.greyColor,
+                  ),
+                  SizedBox(
+                    height: 30.h,
+                  ),
+                  Form(
+                    key: formKey,
+                    child: PhoneCodePicker(
+                        textAlign: TextAlign.center,
+                        phoneController: phone,
+                        width: 7.sw),
+                  ),
+                  SizedBox(
+                    height: 40.sp,
+                  ),
+                  Button(
+                    color: AppColors.mainColor,
+                    height: 45.h,
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    onPressed: isPrivacyChecked
+                        ? () async {
+                            if (formKey.currentState!.validate()) {
+                              FocusScope.of(context).unfocus();
+
+                              String phoneNumber = '';
+                              var code = "";
+                              // if (phone.text.startsWith('0')) {
+                              //   phoneNumber = phone.text.substring(1);
+                              // } else {
+                              //   phoneNumber = phone.text;
+                              // }
+                              // OtpResult? result =
+                              //     await AuthController.generateOTP(
+                              //         mobileNumber:
+                              //             BlocProvider.of<GetAllCountriesCubit>(
+                              //                         context)
+                              //                     .prefixCode
+                              //                     .toString() +
+                              //                 phoneNumber,
+                              //         isRegister: true,
+                              //         phoneCountryId:
+                              //             BlocProvider.of<GetAllCountriesCubit>(
+                              //                     context)
+                              //                 .id
+                              //                 .toString(),
+                              //         authType: '2');
+                              // if (result!.status == 'success') {
+                              //   var code = "";
+                              //   if (result.code != null) {
+                              //     code = result.code!;
+                              //   }
+                              Navigator.pushNamed(
+                                  Get.context!, ScreenNames.loginOtpScreen,
+                                  arguments: [
+                                    otpType.signUp,
+                                    phoneNumber,
+                                    code
+                                  ]);
+                              // goToScreen(
+                              //     screenNames: ScreenNames.loginOtpScreen,
+                              //     arguments: [
+                              //       otpType.signUp,
+                              //       phoneNumber,
+                              //       code
+                              //     ]);
+                              // }
+                            }
+                          }
+                        : () {
+                            // Get.snackbar(AppWords.error.tr,
+                            //     'please Check Terms And Conditions',
+                            //     backgroundColor: Colors.red,
+                            //     colorText: Colors.white,
+                            //     snackPosition: SnackPosition.BOTTOM);
+                          },
+                    text: AppWords.send.tr,
+                  ),
+                  SizedBox(
+                    height: 10.h,
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 0.37.sh,
+            ),
+            Padding(
+              padding: EdgeInsets.all(20.sp),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const TxtN(
+                        text: 'ليس لديك حساب؟ ',
+                        fontSize: 14,
+                        fontWeight: FontWeight.normal,
+                        color: AppColors.subTitleColor,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pushReplacementNamed(
+                              context, ScreenNames.loginScreen);
+                        },
+                        child: const TxtN(
+                          text: 'تسجيل جديد',
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.mainTitleColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                  // SizedBox(
+                  //   height: 10.sp,
+                  // ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Transform.scale(
+                        scale: 1.2,
+                        child: Checkbox(
+                            activeColor: AppColors.mainColor,
+                            value: isPrivacyChecked,
+                            onChanged: (value) {}),
+                      ),
+                      TxtN(
+                        text: ' بتسجيل الدخول , انت توافق على ',
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.normal,
+                        color: Colors.grey,
+                        height: 1.5,
+                      ),
+                      GestureDetector(
+                        onTap: () async {
+                          const url = 'https://takid.sa/';
+                          if (!await launchUrl(Uri.parse(url))) {
+                            throw 'Could not launch ${Uri.parse(url)}';
+                          }
+                        },
+                        child: Text(
+                          "الشروط والاحكام",
+                          style: TextStyle(
+                            color: AppColors.mainColor,
+                            fontSize: 11.sp,
+                            fontWeight: FontWeight.normal,
+                            fontFamily: AppFonts.mainfont,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
+                      TxtN(
+                        text: " الخاصة بنا",
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.normal,
+                        color: AppColors.mainTitleColor,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
