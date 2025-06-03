@@ -1,0 +1,83 @@
+import 'package:etrack/components/button/button.dart';
+import 'package:etrack/routes/routes.dart';
+import 'package:etrack/utility/app_colors.dart';
+import 'package:etrack/utility/app_fonts.dart';
+import 'package:etrack/utility/image_path.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+class OtpSuccessScreen extends StatefulWidget {
+  const OtpSuccessScreen({Key? key}) : super(key: key);
+
+  @override
+  State<OtpSuccessScreen> createState() => _OtpSuccessScreenState();
+}
+
+class _OtpSuccessScreenState extends State<OtpSuccessScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        toolbarHeight: 0,
+      ),
+      backgroundColor: AppColors.mainColor,
+      body: Stack(
+        children: [
+          Container(
+            width: 1.sw,
+            height: 1.sh,
+            decoration: const BoxDecoration(
+                gradient: RadialGradient(
+                    tileMode: TileMode.clamp,
+                    radius: .7,
+                    colors: [
+                  // Color(0xff074F89),
+                  Color(0xff074F89),
+                  Color(0xff0C3D64),
+                ])),
+          ),
+          SizedBox(
+            width: 1.sw,
+            child: Column(
+              children: [
+                SizedBox(height: .3.sh),
+                Image.asset(AppImages.success,
+                    width: 155.w, fit: BoxFit.fitWidth),
+                SizedBox(height: 40.h),
+                Text(
+                  "تم التحقق من \n الرمز بنجاح",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: AppFonts.mainfont,
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                const Spacer(),
+                SizedBox(
+                    width: .85.sw,
+                    child: Button(
+                      fontSize: 14.sp,
+                      height: 45.h,
+                      color: Colors.white,
+                      textColor: AppColors.mainColor,
+                      fontWeight: FontWeight.w700,
+                      text: "إبدأ الأن",
+                      onPressed: () {
+                        Navigator.pushNamed(
+                            context, ScreenNames.completeSignupScreen);
+                      },
+                    )),
+                SizedBox(
+                  height: 40.h,
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
