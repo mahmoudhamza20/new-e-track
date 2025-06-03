@@ -1,0 +1,50 @@
+import 'package:etrack/utility/image_path.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+bool isFirstScreen = true;
+
+class SplashScreen extends StatelessWidget {
+  const SplashScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: Colors.white,
+        body: Stack(
+          children: [
+            SizedBox(
+              height: 1.sh,
+              width: 1.sw,
+              child: SvgPicture.asset(
+                AppImages.splashBack,
+                fit: BoxFit.fitHeight,
+              ),
+            ),
+            SizedBox(
+              width: 1.sw,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: .3.sh),
+                  Image.asset(
+                    AppImages.splashLogo,
+                    width: 194.h,
+                  ),
+                  Text(
+                    'E-TRACK',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 38.sp,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xff0C3D64),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ));
+  }
+}
