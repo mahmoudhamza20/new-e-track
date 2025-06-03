@@ -1,0 +1,211 @@
+import 'package:etrack/components/back_button.dart';
+import 'package:etrack/components/button/button.dart';
+import 'package:etrack/components/text/text_custom.dart';
+import 'package:etrack/routes/routes.dart';
+import 'package:etrack/utility/app_colors.dart';
+import 'package:etrack/utility/app_fonts.dart';
+import 'package:etrack/utility/image_path.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pin_code_text_field/pin_code_text_field.dart';
+import 'package:sms_autofill/sms_autofill.dart';
+
+class LoginOtpScreen extends StatefulWidget {
+  const LoginOtpScreen({Key? key}) : super(key: key);
+
+  @override
+  State<LoginOtpScreen> createState() => _LoginOtpScreenState();
+}
+
+class _LoginOtpScreenState extends State<LoginOtpScreen> with CodeAutoFill {
+  String appSignature = '';
+  @override
+  void initState() {
+    listenForCode();
+    SmsAutoFill().getAppSignature.then((signature) {
+      setState(() {
+        appSignature = signature;
+        print(appSignature);
+      });
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    cancel();
+    super.dispose();
+  }
+
+  GlobalKey<FormState> otpFormKey = GlobalKey();
+  TextEditingController otpController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: Column(
+            children: [
+              SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.all(20.sp),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      const Row(
+                        children: [
+                          BackButtonCustom(isDark: false),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 30.h,
+                      ),
+                      SvgPicture.asset(
+                        AppImages.message,
+                        width: 230.w,
+                        height: 95.h,
+                      ),
+                      SizedBox(
+                        height: 10.h,
+                      ),
+                      TxtN(
+                        text: "التحقق من OTP",
+                        fontSize: 22.sp,
+                        color: AppColors.mainColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      SizedBox(
+                        height: 10.h,
+                      ),
+                      Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text:
+                                  'الرجاء ادخال رمز التحقق المرسل على رقم الجوال المسجل',
+                              style: TextStyle(
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w400,
+                                  fontFamily: AppFonts.mainfont,
+                                  color: const Color(0xff737373)),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 40.h,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Form(
+                            key: otpFormKey,
+                            child: PinCodeTextField(
+                              onTextChanged: (text) {
+                                // if (text.length == 6) {
+                                //   isDone = true;
+                                //   validateOtpCubit.update(data: '');
+                                // } else if (text.isEmpty) {
+                                //   validateOtpCubit.update(data: 'مطلوب');
+                                // } else if (text.length <= 6) {
+                                //   isDone = false;
+                                //   validateOtpCubit.update(
+                                //       data: 'please Enter Six Digits');
+                                // }
+                              },
+                              controller: otpController,
+                              maxLength: 6,
+                              pinBoxWidth: 50.w,
+                              pinBoxHeight: 50.w,
+                              wrapAlignment: WrapAlignment.spaceBetween,
+                              pinBoxOuterPadding: EdgeInsets.all(2.sp),
+                              pinBoxDecoration: (color, color1,
+                                      {double? borderWidth, double? radius}) =>
+                                  BoxDecoration(
+                                      borderRadius:
+                                          BorderRadius.circular(200.r),
+                                      color: const Color(0xffF7F7FA),
+                                      border: Border.all(
+                                          color: Colors.transparent)),
+                              pinTextStyle: TextStyle(
+                                  fontSize: 15.sp,
+                                  color: AppColors.mainTitleColor,
+                                  fontFamily: AppFonts.mainfont,
+                                  fontWeight: FontWeight.bold),
+                              keyboardType: TextInputType.number,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10.h,
+                      ),
+                      SizedBox(
+                        height: 25.h,
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "لم تتلقى رمز التحقق ؟",
+                            style: TextStyle(
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.normal,
+                                fontFamily: AppFonts.mainfont,
+                                color: AppColors.subTitleColor),
+                          ),
+                          TextButton(
+                            onPressed: resendCode,
+                            child: Text(
+                              "إعادة الإرسال الآن",
+                              style: TextStyle(
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: AppFonts.mainfont,
+                                  color: AppColors.mainColor),
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const Spacer(),
+              SizedBox(
+                  width: .9.sw,
+                  child: Button(
+                    color: AppColors.mainColor,
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(
+                          context, ScreenNames.otpSuccess);
+                    },
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.bold,
+                    text: 'تحقق و تابع',
+                    height: 50.h,
+                  )),
+              SizedBox(
+                height: 20.h,
+              )
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  void codeUpdated() {
+    print(code);
+    print(1);
+  }
+
+  void resendCode() {}
+}
