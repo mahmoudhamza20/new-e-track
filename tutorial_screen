@@ -1,0 +1,177 @@
+import 'package:etrack/components/button/button.dart';
+import 'package:etrack/routes/routes.dart';
+import 'package:etrack/screens/intro_screens/tutorial_screen/component/SplashHeader.dart';
+import 'package:etrack/utility/all_app_words.dart';
+import 'package:etrack/utility/app_colors.dart';
+import 'package:etrack/utility/app_fonts.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+
+class TutorialScreen extends StatefulWidget {
+  const TutorialScreen({Key? key}) : super(key: key);
+
+  @override
+  State<TutorialScreen> createState() => _TutorialScreenState();
+}
+
+class _TutorialScreenState extends State<TutorialScreen> {
+  @override
+  void dispose() {
+    pageController.dispose();
+    super.dispose();
+  }
+
+  int currentPage = 0;
+  final PageController pageController = PageController();
+
+  List<Map<String, String>> splashData = [
+    {
+      "text": AppWords.security.tr,
+      "image": "assets/images/onBoarding_1.png",
+      'width': '387',
+      'height': '356'
+    },
+    {
+      "text": AppWords.schedule.tr,
+      "image": "assets/images/onBoarding_2.png",
+      'width': '256',
+      'height': '274'
+    },
+    {
+      "text": AppWords.amazingFeatures.tr,
+      "image": "assets/images/onBoarding_3.png",
+      'width': '206',
+      'height': '303'
+    },
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.skyColor,
+      body: Stack(
+        children: [
+          Positioned(
+            right: -50,
+            top: 130.h,
+            child: Image.asset(
+              'assets/images/tutorial_back.png',
+              width: 650.w,
+              height: 190.h,
+              fit: BoxFit.cover,
+            ),
+          ),
+          Positioned(
+            right: -310.w,
+            bottom: -650.h,
+            child: Container(
+              width: 1000.h,
+              height: 1000.h,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(500.r)),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(right: .025.sw, left: .025.sw),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 150.h,
+                ),
+                SizedBox(
+                  width: .95.sw,
+                  height: .58.sh,
+                  child: PageView.builder(
+                      controller: pageController,
+                      onPageChanged: (value) {
+                        setState(() {
+                          currentPage = value;
+                        });
+                      },
+                      itemCount: splashData.length,
+                      itemBuilder: (context, index) {
+                        return SplashHeader(
+                          splashData[index]['text'].toString(),
+                          splashData[index]['image'].toString(),
+                          height: double.parse(
+                              splashData[index]['height'].toString()),
+                          width: double.parse(
+                              splashData[index]['width'].toString()),
+                        );
+                      }),
+                ),
+                SizedBox(
+                  height: 30.h,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(
+                      splashData.length, (index) => buildContainerDots(index)),
+                ),
+                const Spacer(),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 194.w,
+                      child: ButtonWithArrow(
+                          height: 45.h,
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.mainColor,
+                          onPressed: () {
+                            if (currentPage < 2) {
+                              pageController.nextPage(
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.linear);
+                            } else {
+                              goToWithRemoveRoute(
+                                  screenName: ScreenNames.homeScreen,
+                                  context: context);
+                            }
+                          },
+                          text: currentPage < 2 ? 'التالي' : 'هيا لنذهب'),
+                    ),
+                    const Spacer(),
+                    TextButton(
+                        onPressed: () {
+                          goToWithRemoveRoute(
+                              screenName: ScreenNames.homeScreen,
+                              context: context);
+                        },
+                        child: Text(
+                          'تخطي',
+                          style: TextStyle(
+                              color: const Color(0xff8A8AA5),
+                              fontFamily: AppFonts.mainfont,
+                              fontSize: 14.sp),
+                        )),
+                  ],
+                ),
+                SizedBox(
+                  height: .05.sh,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  AnimatedContainer buildContainerDots(int index) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      height: 8.h,
+      width: currentPage == index ? 25.sp : 8.sp,
+      margin: EdgeInsets.only(right: 5.w),
+      decoration: BoxDecoration(
+          color: currentPage == index
+              ? AppColors.skyColor
+              : const Color(0xFFD8D8D8),
+          borderRadius: BorderRadius.circular(250)),
+    );
+  }
+}
