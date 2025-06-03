@@ -1,0 +1,400 @@
+import 'package:etrack/components/custom_items_cubits/loading_cubit/loading_cubit.dart';
+import 'package:etrack/components/search_textform.dart';
+import 'package:etrack/data/user_data.dart';
+import 'package:etrack/model/work_offer_model.dart';
+import 'package:etrack/routes/routes.dart';
+import 'package:etrack/screens/home_screen/components/work_item.dart';
+import 'package:etrack/screens/home_screen/home_data.dart';
+import 'package:etrack/utility/app_colors.dart';
+import 'package:etrack/utility/app_fonts.dart';
+import 'package:etrack/utility/app_setting.dart';
+import 'package:etrack/utility/image_path.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+
+class MainScreen extends StatelessWidget {
+  MainScreen({
+    Key? key,
+    required this.showFilter,
+    required this.loading,
+  }) : super(key: key);
+
+  final Loading loading;
+
+  // List<LookUp> shiftType = [];
+
+  // List<LookUp> company = [];
+
+  final PagingController<int, WorkOfferModelData> pagingController =
+      PagingController(firstPageKey: 0, invisibleItemsThreshold: 1);
+
+  @override
+  Widget build(BuildContext context) {
+    final rtl = isArabic;
+    return ValueListenableBuilder<DrawerState>(
+      valueListenable: ZoomDrawer.of(context)!.stateNotifier,
+      builder: (context, state, child) {
+        return AbsorbPointer(
+          absorbing: state != DrawerState.closed,
+          child: child,
+        );
+      },
+      child: GestureDetector(
+        child: Stack(
+          children: [
+            Scaffold(
+              resizeToAvoidBottomInset: false,
+              appBar: AppBar(
+                leading: Container(),
+                backgroundColor: Colors.transparent,
+                toolbarHeight: 0,
+              ),
+              backgroundColor: AppColors.mainColor,
+              body: Stack(
+                children: [
+                  Positioned(
+                      bottom: 0,
+                      child: Container(
+                        width: 1.sw,
+                        height: .65.sh,
+                        decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(18),
+                                topLeft: Radius.circular(18))),
+                      )),
+                  SizedBox(
+                    height: 1.sh,
+                    child: Column(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(right: .05.sw, left: .05.sw),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                height: 15.h,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  // goToScreen(
+                                  //   screenNames: ScreenNames.completeSignupScreen,
+                                  // );
+                                  ZoomDrawer.of(context)?.toggle.call();
+                                },
+                                child: Container(
+                                  height: 30.h,
+                                  width: 30.h,
+                                  decoration: BoxDecoration(
+                                      color: Colors.white.withOpacity(.1),
+                                      borderRadius: BorderRadius.circular(7.r)),
+                                  child: Center(
+                                    child: SvgPicture.asset(
+                                      AppImages.square,
+                                      width: 17.w,
+                                      fit: BoxFit.fitWidth,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: .025.sh,
+                              ),
+                              Text(
+                                'مرحبا بك',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 16.sp,
+                                    fontFamily: AppFonts.mainfont,
+                                    color: Colors.white),
+                              ),
+                              Text(
+                                'اعثر على وظيفة مثالية !',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20.sp,
+                                    fontFamily: AppFonts.mainfont,
+                                    color: Colors.white),
+                              ),
+                              SizedBox(
+                                height: 15.h,
+                              ),
+                              SizedBox(
+                                child: Row(
+                                  children: [
+                                    SizedBox(
+                                        width: .74.sw,
+                                        child: SearchTextForm(
+                                          textColor: Colors.white,
+                                          fillColor:
+                                              Colors.white.withOpacity(.1),
+                                          hintText: 'ما الذي تبحث عنه؟',
+                                          // AppWords.whatAreYouLookingFor.tr,
+                                          search: (searchTextFiled) async {
+                                            // if (searchTextFiled != '') {
+                                            //   widget.loading.show;
+                                            //   searchText = searchTextFiled;
+                                            //   pagingController.itemList!
+                                            //       .clear();
+                                            //   pageNumber = 1;
+                                            //   await fetchPage(
+                                            //       pageNumber, ListType.search);
+                                            //   widget.loading.hide;
+                                            // } else {
+                                            //   widget.loading.show;
+                                            //   searchText = searchTextFiled;
+
+                                            //   pagingController.itemList!
+                                            //       .clear();
+
+                                            //   pageNumber = 1;
+                                            //   await fetchPage(pageNumber,
+                                            //       ListType.workOffers);
+                                            //   widget.loading.hide;
+                                            // }
+                                          },
+                                        )),
+                                    const Spacer(),
+                                    GestureDetector(
+                                      onTap: () {
+                                        showFilter(pagingController);
+                                      },
+                                      child: Container(
+                                        width: 48.h,
+                                        height: 48.h,
+                                        decoration: BoxDecoration(
+                                            color: AppColors.skyColor,
+                                            borderRadius:
+                                                BorderRadius.circular(250)),
+                                        child: Center(
+                                          child: SvgPicture.asset(
+                                            'assets/images/filter_icon.svg',
+                                            height: 22.h,
+                                            fit: BoxFit.fitHeight,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Container()
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 12.h,
+                        ),
+                        Expanded(
+                          child: Container(
+                            width: 1.sw,
+                            padding: EdgeInsets.only(
+                                left: .05.sw, right: .05.sw, top: 10.h),
+                            decoration: BoxDecoration(
+                                // color: Colors.white.withOpacity(.9),
+                                borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(15.r),
+                                    topLeft: Radius.circular(15.r))),
+                            child: PagedListView<int, WorkOfferModelData>(
+                                pagingController: pagingController,
+                                builderDelegate: PagedChildBuilderDelegate<
+                                        WorkOfferModelData>(
+                                    firstPageProgressIndicatorBuilder: (c) {
+                                  return Container();
+                                }, noItemsFoundIndicatorBuilder: (context) {
+                                  return Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Text(
+                                        'لا يوجد وظائف',
+                                        style: TextStyle(
+                                            color: AppColors.mainTitleColor,
+                                            fontSize: 20.sp,
+                                            fontFamily: AppFonts.mainfont),
+                                      ),
+                                    ],
+                                  );
+                                }, itemBuilder: (context, item, index) {
+                                  return WorkItem(
+                                    offer: item,
+                                    loading: loading,
+                                  );
+                                })),
+                            //  TabBarCustom(
+                            //   tabNames: [AppWords.jobs.tr, AppWords.coverage.tr],
+                            //   children: [
+                            //     PagedListView<int, WorkOfferModelData>(
+                            //         pagingController: pagingController,
+                            //         builderDelegate:
+                            //             PagedChildBuilderDelegate<WorkOfferModelData>(
+                            //                 firstPageProgressIndicatorBuilder: (c) {
+                            //           return Container();
+                            //         }, noItemsFoundIndicatorBuilder: (context) {
+                            //           return Row(
+                            //             mainAxisAlignment:
+                            //                 MainAxisAlignment.spaceAround,
+                            //             children: [
+                            //               Text(
+                            //                 AppWords.noJobsFound.tr,
+                            //                 style: TextStyle(
+                            //                     color: AppColors.mainColor,
+                            //                     fontSize: 20.sp,
+                            //                     fontFamily: AppFonts.mainfont),
+                            //               ),
+                            //             ],
+                            //           );
+                            //         }, itemBuilder: (context, item, index) {
+                            //           return WorkItem(
+                            //             offer: item,
+                            //             loading: widget.loading,
+                            //           );
+                            //         })),
+                            //     const Coverages()
+                            //   ],
+                            // ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (Data.userData == null)
+              isArabic
+                  ? Positioned(
+                      top: 60.h,
+                      left: 20.w,
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, ScreenNames.loginScreen);
+                          // goToScreen(
+                          //   screenNames: ScreenNames.loginScreen,
+                          // );
+                        },
+                        child: Text(
+                          'تسجيل دخول',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14.sp,
+                              fontFamily: AppFonts.mainfont,
+                              color: Colors.white),
+                        ),
+                      ),
+                    )
+                  : Positioned(
+                      top: 30.h,
+                      right: 20.w,
+                      child: TextButton(
+                          onPressed: () {
+                            Navigator.pushNamed(
+                                context, ScreenNames.loginScreen);
+                            // goToScreen(screenNames: ScreenNames.loginScreen);
+                          },
+                          child: Text(
+                            'تسجيل دخول',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12.sp,
+                                fontFamily: AppFonts.mainfont,
+                                color: Colors.white),
+                          )),
+                    ),
+            if (Data.userData != null && isArabic)
+              Positioned(
+                top: 70.h,
+                left: 20.w,
+                child: GestureDetector(
+                  onTap: () {
+                    // goToWithRemoveRoute(
+                    //   screenName: Data.home,
+                    //   context: context,
+                    // );
+                  },
+                  child: Container(
+                    height: 35.h,
+                    width: 35.h,
+                    decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(.1),
+                        borderRadius: BorderRadius.circular(7.r)),
+                    child: Center(
+                      child: SvgPicture.asset(
+                        'assets/images/home.svg',
+                        width: 17.w,
+                        fit: BoxFit.fitWidth,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            if (Data.userData != null && !isArabic)
+              Positioned(
+                top: 30.h,
+                right: 20.w,
+                child: GestureDetector(
+                  onTap: () {
+                    // goToWithRemoveRoute(
+                    //   screenName: Data.home,
+                    //   context: context,
+                    // );
+                  },
+                  child: Container(
+                    height: 30.h,
+                    width: 30.h,
+                    decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(.1),
+                        borderRadius: BorderRadius.circular(7.r)),
+                    child: Center(
+                      child: SvgPicture.asset(
+                        'assets/images/home.svg',
+                        width: 17.w,
+                        fit: BoxFit.fitWidth,
+                      ),
+                    ),
+                  ),
+                ),
+              )
+          ],
+        ),
+        onPanUpdate: (details) {
+          if (details.delta.dx < 6 && !rtl || details.delta.dx < -6 && rtl) {
+            ZoomDrawer.of(context)?.toggle.call();
+          }
+        },
+      ),
+    );
+  }
+
+  Widget getPositioned() {
+    if (isArabic) {
+      return Positioned(
+        left: -20.w,
+        top: -0,
+        child: SvgPicture.asset(
+          AppImages.logoWhite,
+          color: Colors.grey.withOpacity(.1),
+          width: 130.w,
+          fit: BoxFit.fitWidth,
+        ),
+      );
+    } else {
+      return Positioned(
+        right: -20.w,
+        top: -0,
+        child: SvgPicture.asset(
+          AppImages.logoWhite,
+          color: Colors.grey.withOpacity(.1),
+          width: 130.w,
+        ),
+      );
+    }
+  }
+
+  final Function showFilter;
+}
+
+void fetchPage(int pageKey, ListType workOffers) {}
