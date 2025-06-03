@@ -1,0 +1,239 @@
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:etrack/components/back_button.dart';
+import 'package:etrack/components/button/button.dart';
+import 'package:etrack/components/phone_field_with_country_picker.dart';
+import 'package:etrack/components/text/text_custom.dart';
+import 'package:etrack/routes/routes.dart';
+import 'package:etrack/screens/auth/signup_screen/signup_screen.dart';
+import 'package:etrack/utility/app_colors.dart';
+import 'package:etrack/utility/app_fonts.dart';
+import 'package:etrack/utility/image_path.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:local_auth/local_auth.dart';
+
+class LoginScreen extends StatelessWidget {
+  LoginScreen({Key? key}) : super(key: key);
+
+  TextEditingController phone = TextEditingController();
+
+  GlobalKey<FormState> formKey = GlobalKey();
+
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
+  final LocalAuthentication auth = LocalAuthentication();
+
+  bool canAuthenticate = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Scaffold(
+            resizeToAvoidBottomInset: false,
+            appBar: AppBar(
+              toolbarHeight: 0,
+            ),
+            body: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(10.sp),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Row(
+                          children: [
+                            BackButtonCustom(isDark: false),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 30.h,
+                        ),
+                        SvgPicture.asset(
+                          AppImages.welcome,
+                          width: 156.w,
+                          height: 97.h,
+                          fit: BoxFit.fitHeight,
+                        ),
+                        SizedBox(
+                          height: 30.h,
+                        ),
+                        TxtN(
+                          text: "مرحبا بعودتك,",
+                          fontSize: 28.sp,
+                          color: AppColors.mainColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        SizedBox(
+                          height: 15.sp,
+                        ),
+                        TxtN(
+                          text: "سجل الدخول للاستمرار",
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.grey,
+                        ),
+                        SizedBox(
+                          height: 60.h,
+                        ),
+                        Form(
+                          key: formKey,
+                          child: PhoneCodePicker(
+                              textAlign: TextAlign.center,
+                              phoneController: phone,
+                              width: 1.sw),
+                        ),
+                        SizedBox(
+                          height: 30.h,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: ButtonWithArrow(
+                                color: AppColors.mainColor,
+                                height: 50.h,
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.bold,
+                                onPressed: () async {
+                                  if (formKey.currentState!.validate()) {
+                                    FocusScope.of(context).unfocus();
+
+                                    String phoneNumber = '';
+                                    String code = '';
+                                    // if (phone.text.startsWith('0')) {
+                                    //   phoneNumber = phone.text.substring(1);
+                                    // } else {
+                                    //   phoneNumber = phone.text;
+                                    // }
+
+                                    // OtpResult? result =
+                                    //     await AuthController.generateOTP(
+                                    //         mobileNumber: BlocProvider.of<
+                                    //                         GetAllCountriesCubit>(
+                                    //                     context)
+                                    //                 .prefixCode
+                                    //                 .toString() +
+                                    //             phoneNumber,
+                                    //         isRegister: false,
+                                    //         phoneCountryId: BlocProvider.of<
+                                    //                     GetAllCountriesCubit>(
+                                    //                 context)
+                                    //             .id
+                                    //             .toString(),
+                                    //         authType: '10');
+                                    // if (result!.status == 'success') {
+                                    //   var code = "";
+                                    //   if (result.code != null) {
+                                    //     code = result.code!;
+                                    //   }
+                                    goToScreen(
+                                        screenNames: ScreenNames.loginOtpScreen,
+                                        arguments: [
+                                          otpType.login,
+                                          phoneNumber,
+                                          code,
+                                          false
+                                        ]);
+                                  }
+                                },
+                                text: "تسجيل الدخول",
+                              ),
+                            ),
+                            SizedBox(
+                              width: 10.w,
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 0.2.sh,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(20.sp),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TxtN(
+                              text: " ليس لديك حساب؟",
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.normal,
+                              color: AppColors.subTitleColor,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pushReplacementNamed(
+                                    context, ScreenNames.signupScreen);
+                              },
+                              child: TxtN(
+                                text: ' تسجيل جديد',
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.mainTitleColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10.h,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TxtN(
+                              text: ' بتسجيل الدخول , انت توافق على ',
+                              fontSize: 10.sp,
+                              fontWeight: FontWeight.normal,
+                              color: Colors.grey,
+                              height: 1.5,
+                            ),
+                            GestureDetector(
+                              onTap: () async {
+                                Navigator.pushNamed(
+                                    context, ScreenNames.termsScreen);
+                              },
+                              child: Text(
+                                "الشروط والأحكام",
+                                style: TextStyle(
+                                  color: AppColors.mainColor,
+                                  fontSize: 11.sp,
+                                  fontWeight: FontWeight.normal,
+                                  fontFamily: AppFonts.mainfont,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
+                            TxtN(
+                              text: " الخاصة بنا",
+                              fontSize: 10.sp,
+                              fontWeight: FontWeight.normal,
+                              color: AppColors.mainTitleColor,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            )),
+      ],
+    );
+  }
+
+  initData() async {
+    bool canAuthenticateWithBiometrics = false;
+    canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
+    canAuthenticate =
+        canAuthenticateWithBiometrics || await auth.isDeviceSupported();
+  }
+}
