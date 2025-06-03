@@ -3,7 +3,6 @@ import 'package:etrack/components/back_button.dart';
 import 'package:etrack/components/button/button.dart';
 import 'package:etrack/components/phone_field_with_country_picker.dart';
 import 'package:etrack/routes/routes.dart';
-import 'package:etrack/utility/all_app_words.dart';
 import 'package:etrack/utility/app_colors.dart';
 import 'package:etrack/utility/app_fonts.dart';
 import 'package:flutter/material.dart';
@@ -136,7 +135,7 @@ class SignupScreen extends StatelessWidget {
                             //     colorText: Colors.white,
                             //     snackPosition: SnackPosition.BOTTOM);
                           },
-                    text: AppWords.send.tr,
+                    text: 'إرسال',
                   ),
                   SizedBox(
                     height: 10.h,
@@ -166,7 +165,7 @@ class SignupScreen extends StatelessWidget {
                               context, ScreenNames.loginScreen);
                         },
                         child: const TxtN(
-                          text: 'تسجيل جديد',
+                          text: "تسجيل الدخول",
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
                           color: AppColors.mainTitleColor,
