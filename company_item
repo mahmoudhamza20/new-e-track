@@ -1,0 +1,116 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:etrack/utility/app_colors.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+class CompanyItem extends StatelessWidget {
+  const CompanyItem(
+      {Key? key,
+      //  required this.userCompaniesModel,
+      required this.isSelected,
+      required this.onSelect})
+      : super(key: key);
+  // final UserCompaniesModel userCompaniesModel;
+  final bool isSelected;
+  final Function onSelect;
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        // onSelect(userCompaniesModel);
+      },
+      child: Card(
+        elevation: 5,
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+        child: Container(
+          padding: EdgeInsets.only(top: 10.h, bottom: 10.h),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.r),
+              color: isSelected
+                  ? AppColors.secondaryColor
+                  : AppColors.unselectedColor),
+          child: Row(
+            children: [
+              // Image.network(userCompaniesModel.securityCompany.)
+              Container(
+                height: 50.h,
+                width: 50.h,
+                margin: EdgeInsets.only(right: 12.w, left: 12.w),
+                clipBehavior: Clip.antiAlias,
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(10.r)),
+                child: CachedNetworkImage(
+                  imageUrl: '',
+                  //  userCompaniesModel
+                  //     .securityCompany!.companyLogo!.fullLink
+                  //     .toString(),
+                  height: 60.h,
+                  fit: BoxFit.fitHeight,
+                  progressIndicatorBuilder: (context, string, progress) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.mainColor,
+                      ),
+                    );
+                  },
+                ),
+              ),
+              SizedBox(
+                width: 5.w,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: .5.sw,
+                    child: Text(
+                      'securityCompany!.name',
+                      // userCompaniesModel.securityCompany!.name.toString(),
+                      style: TextStyle(
+                          color: isSelected
+                              ? Colors.white
+                              : AppColors.mainTitleColor,
+                          fontWeight: FontWeight.w800,
+                          height: 1.5,
+                          fontSize: 15.sp),
+                    ),
+                  ),
+                  SizedBox(
+                    width: .6.sw,
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.place,
+                          size: 15.sp,
+                          color: isSelected
+                              ? Colors.white
+                              : AppColors.subTitleColor,
+                        ),
+                        SizedBox(
+                            width: .55.sw,
+                            child: Text(
+                              'securityCompany!.address',
+                              // userCompaniesModel.securityCompany!.address
+                              // .toString(),
+                              maxLines: 1,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12.sp,
+                                color: isSelected
+                                    ? Colors.white
+                                    : AppColors.subTitleColor,
+                              ),
+                            ))
+                      ],
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
