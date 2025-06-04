@@ -1,0 +1,484 @@
+import 'dart:io';
+
+import 'package:etrack/components/Text/text_custom.dart';
+import 'package:etrack/components/back_button.dart';
+import 'package:etrack/components/button/button.dart';
+import 'package:etrack/helper/validation.dart';
+import 'package:etrack/routes/routes.dart';
+import 'package:etrack/utility/app_colors.dart';
+import 'package:etrack/utility/app_fonts.dart';
+import 'package:etrack/utility/image_path.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
+
+import 'components/main_text_field.dart';
+
+class CompleteSignupScreen extends StatelessWidget {
+  CompleteSignupScreen({Key? key}) : super(key: key);
+
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  final TextEditingController idNumber = TextEditingController();
+
+  final TextEditingController email = TextEditingController();
+
+  final TextEditingController fName = TextEditingController();
+
+  final TextEditingController mName = TextEditingController();
+
+  final TextEditingController lName = TextEditingController();
+
+  String selectedImagePath = '';
+
+  String birthDate = '';
+
+  String selectedGender = '';
+
+  String selectedBloodType = '';
+
+  String selectedNationality = '';
+
+  String selectedCity = '';
+
+  String selectedJobType = '';
+
+  bool isArabic = true;
+
+  bool showPicValidation = false;
+
+  bool showBirthDateValidation = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 0,
+      ),
+      body: SingleChildScrollView(
+        child: Form(
+          key: formKey,
+          child: Container(
+            width: 1.sw,
+            margin: EdgeInsets.only(right: .05.sw, left: .05.sw),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: 20.h),
+                const Row(
+                  children: [
+                    BackButtonCustom(isDark: false),
+                  ],
+                ),
+                SizedBox(height: 20.h),
+                Text(
+                  'البيانات الشخصية',
+                  style: TextStyle(
+                    fontFamily: AppFonts.mainfont,
+                    color: AppColors.mainTitleColor,
+                    fontSize: 26.sp,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                Text(
+                  'إرسال البيانات الشخصية الخاصة بك',
+                  style: TextStyle(
+                      fontFamily: AppFonts.mainfont,
+                      color: AppColors.subTitleColor,
+                      fontSize: 13.sp,
+                      fontWeight: FontWeight.w400,
+                      height: 2),
+                ),
+                SizedBox(height: 5.h),
+
+                // Profile Picture Section
+                SizedBox(
+                  width: 1.sw,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              // Handle image selection
+                            },
+                            child: Container(
+                              width: 93.h,
+                              height: 93.h,
+                              padding: EdgeInsets.all(
+                                  selectedImagePath == '' ? 10.sp : 0),
+                              clipBehavior: Clip.antiAlias,
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey),
+                                  borderRadius: BorderRadius.circular(200.r),
+                                  color: AppColors.unselectedColor),
+                              child: Center(
+                                  child: selectedImagePath == ''
+                                      ? SvgPicture.asset(
+                                          AppImages.camera,
+                                          width: 47.h,
+                                        )
+                                      : Stack(
+                                          alignment: Alignment.bottomLeft,
+                                          children: [
+                                            Image.file(
+                                              File(selectedImagePath),
+                                              fit: BoxFit.cover,
+                                              width: 70.h,
+                                              height: 70.h,
+                                              isAntiAlias: true,
+                                            ),
+                                            Container(
+                                                padding:
+                                                    const EdgeInsets.all(5),
+                                                width: 25.w,
+                                                height: 25.h,
+                                                decoration: const BoxDecoration(
+                                                  color:
+                                                      AppColors.secondaryColor,
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                          topRight:
+                                                              Radius.circular(
+                                                                  20),
+                                                          bottomLeft:
+                                                              Radius.circular(
+                                                                  10)),
+                                                ),
+                                                child: SizedBox(
+                                                  child: SvgPicture.asset(
+                                                    width: 15.w,
+                                                    height: 15.h,
+                                                    color: Colors.white,
+                                                    AppImages.camera,
+                                                  ),
+                                                ))
+                                          ],
+                                        )),
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          showPicValidation
+                              ? Text(
+                                  'الرجاء إضافة صورة شخصية',
+                                  style: TextStyle(
+                                      fontSize: 10.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.red),
+                                )
+                              : Container(),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+
+                SizedBox(height: 5.h),
+
+                // ID Number Field
+                MainTextField(
+                  titleFontSize: 12,
+                  maxLength: 10,
+                  onTap: () {},
+                  controller: idNumber,
+                  title: '*رقم الهوية الوطنية',
+                  hintText: "123456789",
+                  inputType: TextInputType.number,
+                  isDisable: false,
+                  labelText: "رقم الهوية الوطنية*",
+                  textFieldValidType: TextFieldvalidatorType.IdNumber,
+                  obscureText: false,
+                ),
+
+                SizedBox(height: 10.h),
+
+                // Birth Date Picker
+                GestureDetector(
+                  onTap: () {
+                    // Handle date picker
+                  },
+                  child: Container(
+                    padding:
+                        EdgeInsets.only(top: 15.sp, right: 15.sp, left: 15.sp),
+                    width: 1.sw,
+                    decoration: BoxDecoration(
+                        color: AppColors.unselectedColor,
+                        border: Border.all(color: AppColors.borderColor),
+                        borderRadius: BorderRadius.circular(200.sp)),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const TxtN(
+                              text: '*تاريخ الميلاد',
+                              fontSize: 12,
+                              fontWeight: FontWeight.normal,
+                              color: AppColors.subTitleColor,
+                            ),
+                            TxtN(
+                              text: birthDate.isEmpty ? '' : birthDate,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.mainTitleColor,
+                              height: 2,
+                            ),
+                            SizedBox(height: 5.h)
+                          ],
+                        ),
+                        const Spacer(),
+                        Column(
+                          children: [
+                            SvgPicture.asset(
+                              AppImages.calendar,
+                              width: 16.w,
+                            ),
+                            SizedBox(height: 13.h)
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: 5.h),
+                showBirthDateValidation
+                    ? Row(
+                        children: [
+                          const SizedBox(width: 20),
+                          Text(
+                            'مطلوب',
+                            style: TextStyle(
+                                fontSize: 10.sp,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.red),
+                          ),
+                        ],
+                      )
+                    : Container(),
+
+                SizedBox(height: 5.sp),
+
+                // Email Field
+                MainTextField(
+                  titleFontSize: 12,
+                  onTap: () {},
+                  controller: email,
+                  title: "*البريد الإلكتروني",
+                  hintText: "a@example.com",
+                  inputType: TextInputType.text,
+                  isDisable: false,
+                  labelText: "البريد الإلكتروني*",
+                  textFieldValidType: TextFieldvalidatorType.Email,
+                  obscureText: false,
+                ),
+
+                SizedBox(height: 10.h),
+
+                // Name Fields Row
+                Row(
+                  children: [
+                    Expanded(
+                      child: MainTextField(
+                        titleFontSize: 12,
+                        confirmPasswordController: null,
+                        firstPasswordToConfirm: null,
+                        onTap: () {},
+                        controller: fName,
+                        title: '*الاسم الأول',
+                        hintText: "",
+                        inputType: TextInputType.text,
+                        isDisable: false,
+                        labelText: "*الإسم الاول",
+                        textFieldValidType: TextFieldvalidatorType.Name,
+                        obscureText: false,
+                      ),
+                    ),
+                    SizedBox(width: 5.sp),
+                    Expanded(
+                      child: MainTextField(
+                        titleFontSize: 12,
+                        confirmPasswordController: null,
+                        firstPasswordToConfirm: null,
+                        onTap: () {},
+                        controller: mName,
+                        title: '*الاسم الثاني',
+                        hintText: "",
+                        inputType: TextInputType.text,
+                        isDisable: false,
+                        labelText: '*الاسم الثاني',
+                        textFieldValidType: TextFieldvalidatorType.Name,
+                        obscureText: false,
+                      ),
+                    ),
+                    SizedBox(width: 5.sp),
+                    Expanded(
+                      child: MainTextField(
+                        titleFontSize: 12,
+                        confirmPasswordController: null,
+                        firstPasswordToConfirm: null,
+                        onTap: () {},
+                        controller: lName,
+                        title: '*اسم العائلة',
+                        hintText: "",
+                        inputType: TextInputType.text,
+                        isDisable: false,
+                        labelText: '*اسم العائلة',
+                        textFieldValidType: TextFieldvalidatorType.Name,
+                        obscureText: false,
+                      ),
+                    ),
+                  ],
+                ),
+
+                SizedBox(height: 10.h),
+
+                // Gender and Blood Type Row
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        padding: EdgeInsets.all(15.sp),
+                        decoration: BoxDecoration(
+                            color: AppColors.unselectedColor,
+                            border: Border.all(color: AppColors.borderColor),
+                            borderRadius: BorderRadius.circular(200.sp)),
+                        child: Text(
+                          selectedGender.isEmpty ? 'الجنس' : selectedGender,
+                          style: TextStyle(
+                              fontSize: 14.sp,
+                              color: selectedGender.isEmpty
+                                  ? AppColors.subTitleColor
+                                  : AppColors.mainTitleColor),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 5.sp),
+                    Expanded(
+                      child: Container(
+                        padding: EdgeInsets.all(15.sp),
+                        decoration: BoxDecoration(
+                            color: AppColors.unselectedColor,
+                            border: Border.all(color: AppColors.borderColor),
+                            borderRadius: BorderRadius.circular(200.sp)),
+                        child: Text(
+                          selectedBloodType.isEmpty
+                              ? 'فصيلة الدم'
+                              : selectedBloodType,
+                          style: TextStyle(
+                              fontSize: 14.sp,
+                              color: selectedBloodType.isEmpty
+                                  ? AppColors.subTitleColor
+                                  : AppColors.mainTitleColor),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                SizedBox(height: 10.h),
+
+                // Nationality Selector
+                Container(
+                  padding: EdgeInsets.all(15.sp),
+                  width: 1.sw,
+                  decoration: BoxDecoration(
+                      color: AppColors.unselectedColor,
+                      border: Border.all(color: AppColors.borderColor),
+                      borderRadius: BorderRadius.circular(200.sp)),
+                  child: Text(
+                    selectedNationality.isEmpty
+                        ? 'الجنسية'
+                        : selectedNationality,
+                    style: TextStyle(
+                        fontSize: 14.sp,
+                        color: selectedNationality.isEmpty
+                            ? AppColors.subTitleColor
+                            : AppColors.mainTitleColor),
+                  ),
+                ),
+
+                SizedBox(height: 10.h),
+
+                // City Selector
+                Container(
+                  padding: EdgeInsets.all(15.sp),
+                  width: 1.sw,
+                  decoration: BoxDecoration(
+                      color: AppColors.unselectedColor,
+                      border: Border.all(color: AppColors.borderColor),
+                      borderRadius: BorderRadius.circular(200.sp)),
+                  child: Text(
+                    selectedCity.isEmpty ? '*المدينة' : selectedCity,
+                    style: TextStyle(
+                        fontSize: 14.sp,
+                        color: selectedCity.isEmpty
+                            ? AppColors.subTitleColor
+                            : AppColors.mainTitleColor),
+                  ),
+                ),
+
+                SizedBox(height: 10.h),
+
+                // Job Type Selector
+                Container(
+                  padding: EdgeInsets.all(15.sp),
+                  width: 1.sw,
+                  decoration: BoxDecoration(
+                      color: AppColors.unselectedColor,
+                      border: Border.all(color: AppColors.borderColor),
+                      borderRadius: BorderRadius.circular(200.sp)),
+                  child: Text(
+                    selectedJobType.isEmpty ? 'المهنة' : selectedJobType,
+                    style: TextStyle(
+                        fontSize: 14.sp,
+                        color: selectedJobType.isEmpty
+                            ? AppColors.subTitleColor
+                            : AppColors.mainTitleColor),
+                  ),
+                ),
+
+                SizedBox(height: 15.h),
+
+                // Verify with Nafath Button
+                Button(
+                  height: 45.h,
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.mainColor,
+                  text: "تحقق عن طريق نفاذ الوطني",
+                  onPressed: () {
+                    // Handle Nafath verification
+                  },
+                ),
+
+                SizedBox(height: 10.h),
+
+                // Submit Button
+                Button(
+                  height: 45.h,
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.mainColor,
+                  text: 'تسجيل جديد',
+                  onPressed: () {
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        ScreenNames.idNotWorkingGuard,
+                        (Route<dynamic> route) => false);
+                    // Handle form submission
+                  },
+                ),
+
+                SizedBox(height: 20.sp),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
