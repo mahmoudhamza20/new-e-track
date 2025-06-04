@@ -1,0 +1,83 @@
+import 'package:etrack/components/button/button.dart';
+import 'package:etrack/screens/decide_company_screen/components/company_item.dart';
+import 'package:etrack/utility/app_colors.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+class DecideCompanyScreen extends StatefulWidget {
+  const DecideCompanyScreen({Key? key}) : super(key: key);
+
+  @override
+  State<DecideCompanyScreen> createState() => _DecideCompanyScreenState();
+}
+
+class _DecideCompanyScreenState extends State<DecideCompanyScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 0,
+      ),
+      body: Container(
+        width: 1.sw,
+        padding: EdgeInsets.only(left: .05.sw, right: .05.sw),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: .1.sh,
+            ),
+            Text(
+              "إختيار الشركة",
+              style: TextStyle(
+                color: AppColors.mainTitleColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 19.sp,
+              ),
+            ),
+            SizedBox(
+              height: 7.h,
+            ),
+            Text(
+              "سيتم تقديم خلاصتك على أساس ملف اختيار",
+              style: TextStyle(
+                color: AppColors.subTitleColor,
+                fontWeight: FontWeight.w500,
+                fontSize: 13.sp,
+              ),
+            ),
+            SizedBox(
+              height: 20.h,
+            ),
+            Expanded(
+                child: ListView.builder(
+                    itemCount: 2,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: [
+                          CompanyItem(
+                            onSelect: (selectedItem) {},
+                            isSelected: index == 0,
+                          ),
+                          SizedBox(
+                            height: 15.h,
+                          )
+                        ],
+                      );
+                    })),
+            ButtonWithArrow(
+              color: AppColors.mainColor,
+              fontWeight: FontWeight.bold,
+              onPressed: () {},
+              text: "استمرار",
+              height: 45.h,
+            ),
+            SizedBox(
+              height: 20.h,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
