@@ -70,7 +70,7 @@ class CompanyItem extends StatelessWidget {
                       style: TextStyle(
                           color: isSelected
                               ? Colors.white
-                              : AppColors.mainTitleColor,
+                              :  AppColors.blackColor,
                           fontWeight: FontWeight.w800,
                           height: 1.5,
                           fontSize: 15.sp),
