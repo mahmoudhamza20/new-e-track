@@ -22,7 +22,7 @@ class _DecideCompanyScreenState extends State<DecideCompanyScreen> {
         width: 1.sw,
         padding: EdgeInsets.only(left: .05.sw, right: .05.sw),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
               height: .1.sh,
@@ -39,7 +39,7 @@ class _DecideCompanyScreenState extends State<DecideCompanyScreen> {
               height: 7.h,
             ),
             Text(
-              "سيتم تقديم خلاصتك على أساس ملف اختيار",
+              "برجاء اختنيار الشركة الحالية للاستمرار",
               style: TextStyle(
                 color: AppColors.subTitleColor,
                 fontWeight: FontWeight.w500,
