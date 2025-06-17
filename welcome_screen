@@ -165,7 +165,7 @@ class WelcomeScreen extends StatelessWidget {
                 width: 1.sw,
                 child: Center(
                   child: Text(
-                    'تطبيق مستقل موفر التكلفة وسهل الاستخدام',
+                    'التطبيق الأول للخدمات اللوجيستية',
                     style: TextStyle(
                       fontFamily: AppFonts.mainfont,
                       color: Colors.black,
